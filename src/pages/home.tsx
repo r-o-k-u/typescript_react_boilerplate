@@ -1,28 +1,36 @@
 import { Component } from "react";
 import { Route } from "react-router-dom";
-import Menu from "../components/menu";
+import { ThemeProvider, Toggle } from "@fluentui/react";
+import { darkTheme, lightTheme } from "../utils/theme";
 import Dashboard from "../pages/dashBoard";
-import PendingRequests from "../pages/PendingRequests";
 export default class Home extends Component {
-  state = { showMenu: false };
+  state = { showMenu: false, useDarkMode: false };
   render() {
     return (
       <>
-        <div id="wrapper" className="pt-5 mt-md-0 pt-md-0 mt-2">
-          <Menu></Menu>
-          <div id="content-wrapper" className="d-flex flex-column bg-light">
-            <div className="preloader-container w-100">
-              <Route path="/dashboard" exact component={Dashboard} />
-              <Route path="/pending" exact component={PendingRequests} />
+        <ThemeProvider
+          applyTo="body"
+          theme={this.state.useDarkMode ? darkTheme : lightTheme}
+        >
+          <div className="ms-Grid" dir="ltr">
+            <div className="ms-Grid-row">
+              <div className="ms-Grid-col ms-sm12 ms-md12 ms-lg12">
+                <Toggle
+                  label="Change themes"
+                  onText="Dark Mode"
+                  offText="Light Mode"
+                  onChange={() =>
+                    this.setState({ useDarkMode: !this.state.useDarkMode })
+                  }
+                />
+              </div>
             </div>
-            <div className="d-flex flex-fill flex-column"></div>
-            <img
-              src={process.env.PUBLIC_URL + "/logo.png"}
-              className="stamp"
-              alt=""
-            />
           </div>
-        </div>
+
+          <div>
+            <Route path="/dashboard" exact component={Dashboard} />
+          </div>
+        </ThemeProvider>
       </>
     );
   }
